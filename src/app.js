@@ -1,8 +1,7 @@
 const express = require('express')
+const transactionsRouter = require('./routes/transactions/transactions')
 const app = express()
 
-app.get('/', function (req, res) {
-    res.send('Hello World')
-})
+app.use('/transactions', transactionsRouter)
 
 app.listen(3000)
