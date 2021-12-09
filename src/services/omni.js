@@ -24,7 +24,7 @@ async function getOmniTransaction(hash) {
     } catch (e) {
         return {
             success: false,
-            error: e,
+            error: e.message,
         }
     }
 }

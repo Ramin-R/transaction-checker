@@ -29,7 +29,7 @@ async function getEtherOrBscTransaction(hash, isEther) {
     } catch (e) {
         return {
             success: false,
-            error: e,
+            error: e.message,
         }
     }
 }
