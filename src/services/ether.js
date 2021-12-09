@@ -1,11 +1,18 @@
 const axios = require('axios')
 
-const baseUrl = "https://api.etherscan.io/api"
+const etherBaseUrl = "https://api.etherscan.io/api"
+const bscBaseUrl = "https://api.bscscan.com/api"
 
-async function getEtherTransaction(hash) {
+async function getEtherOrBscTransaction(hash, isEther) {
     try {
-        const response = await axios.get(`${baseUrl}?module=proxy&action=eth_getTransactionReceipt&txhash=${hash}&apiKey=${process.env.ETHERSCAN_KEY}`)
-        if (response.data.result != null && response.data.result.status === "0x1") {
+        const apiKey = isEther ? process.env.ETHERSCAN_KEY : process.env.BSCSCAN_KEY
+        const baseUrl = isEther ? etherBaseUrl : bscBaseUrl
+
+        const response = await axios.get(`${baseUrl}?module=proxy&action=eth_getTransactionReceipt&txhash=${hash}&apiKey=${apiKey}`)
+
+
+        console.log(response.data.result && true)
+        if (response.data.result && response.data.result.status === "0x1") {
             return {
                 success: true,
                 data: {
@@ -18,7 +25,6 @@ async function getEtherTransaction(hash) {
                 success: false,
                 data: {
                     confirmed: false,
-                    receiver: response.data.result.to,
                 }
             }
         }
@@ -31,5 +37,5 @@ async function getEtherTransaction(hash) {
 }
 
 module.exports = {
-    getEtherTransaction,
+    getEtherTransaction: getEtherOrBscTransaction,
 }
