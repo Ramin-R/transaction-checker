@@ -23,7 +23,7 @@ async function getAlgoTransaction(hash) {
         }
     } catch (e) {
         // Treat not found (404) and bad request (400) as unconfirmed
-        if (e.response.status >= 400 && e.response.status < 500) {
+        if (e.response && e.response.status >= 400 && e.response.status < 500) {
             return {
                 success: true,
                 data: {
