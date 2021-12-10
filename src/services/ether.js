@@ -35,5 +35,5 @@ async function getEtherOrBscTransaction(hash, isEther) {
 }
 
 module.exports = {
-    getEtherTransaction: getEtherOrBscTransaction,
+    getEtherOrBscTransaction,
 }
