@@ -8,19 +8,22 @@ async function getAlgoTransaction(hash) {
         if (response.status === 200 && response.data['confirmed-round'] > 0) {
             return {
                 success: true,
+                explorer: 'algo',
                 data: {
                     confirmed: true,
                     receiver: response.data.txn.txn.arcv,
                 },
             }
-        } else {
-            return {
-                success: true,
-                data: {
-                    confirmed: false,
-                }
+        }
+
+        return {
+            success: true,
+            explorer: 'algo',
+            data: {
+                confirmed: false,
             }
         }
+
     } catch (e) {
 
         return {

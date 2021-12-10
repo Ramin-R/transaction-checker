@@ -5,12 +5,19 @@ const baseUrl = "https://apilist.tronscan.org/api"
 async function getTronTransaction(hash) {
     try {
         const response = await axios.get(`${baseUrl}/transaction-info?hash=${hash}`)
+        if (response.data.confirmed) {
+            return {
+                success: true,
+                explorer: 'tron',
+                data: {
+                    confirmed: true,
+                    receiver: response.data.toAddress,
+                },
+            }
+        }
+
         return {
-            success: true,
-            data: {
-                confirmed: response.data.confirmed,
-                receiver: response.data.toAddress,
-            },
+            success: false
         }
     } catch (e) {
         return {

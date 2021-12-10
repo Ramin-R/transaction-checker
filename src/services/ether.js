@@ -10,22 +10,32 @@ async function getEtherOrBscTransaction(hash, isEther) {
 
         const response = await axios.get(`${baseUrl}?module=proxy&action=eth_getTransactionReceipt&txhash=${hash}&apiKey=${apiKey}`)
 
+        const explorer =  isEther ? 'ether' : 'bsc'
+
         if (response.data.result && response.data.result.status === "0x1") {
             return {
                 success: true,
+                explorer,
                 data: {
                     confirmed: true,
                     receiver: response.data.result.to,
                 },
             }
-        } else {
+        } else if (response.data.result) {
             return {
-                success: false,
+                success: true,
+                explorer,
                 data: {
                     confirmed: false,
+                    receiver: response.data.result.to,
                 }
             }
         }
+
+        return {
+            success: false,
+        }
+
     } catch (e) {
         return {
             success: false,
