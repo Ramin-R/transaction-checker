@@ -9,31 +9,26 @@ const transactionsRouter = express.Router()
 transactionsRouter.get('/', transactionStatus)
 
 async function transactionStatus(req, res) {
-    const { hash, explorer } = req.query
+    const { hash } = req.query
 
-    let result
+    const results = await Promise.allSettled([
+        getAlgoTransaction(hash),
+        getEtherOrBscTransaction(hash, false),
+        getOmniTransaction(hash),
+        getTronTransaction(hash)
+    ])
 
-    switch (explorer) {
-        case "algo":
-            result = await getAlgoTransaction(hash)
-            break
-        case "bsc":
-            result = await getEtherOrBscTransaction(hash, false)
-            break
-        case "ether":
-            result = await getEtherOrBscTransaction(hash, true)
-            break
-        case "omni":
-            result = await getOmniTransaction(hash)
-            break
-        case "tron":
-            result = await getTronTransaction(hash)
-            break
-        default:
-            result = { success: false, error: "Invalid or unsupported explorer" }
+    for (const result of results) {
+        console.log(result)
+        if (result.value.success) {
+            return res.json(result.value)
+        }
     }
 
-    return res.json(result)
+    return res.status(404).json({
+        success: false,
+        error: "transaction not found in any explorer"
+    })
 }
 
 module.exports = transactionsRouter

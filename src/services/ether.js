@@ -13,19 +13,27 @@ async function getEtherOrBscTransaction(hash, isEther) {
         if (response.data.result && response.data.result.status === "0x1") {
             return {
                 success: true,
+                explorer: isEther ? 'ether' : 'bsc',
                 data: {
                     confirmed: true,
                     receiver: response.data.result.to,
                 },
             }
-        } else {
+        } else if (response.data.result) {
             return {
-                success: false,
+                success: true,
+                explorer: isEther ? 'ether' : 'bsc',
                 data: {
                     confirmed: false,
+                    receiver: response.data.result.to,
                 }
             }
         }
+
+        return {
+            success: false,
+        }
+
     } catch (e) {
         return {
             success: false,

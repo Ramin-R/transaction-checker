@@ -8,19 +8,18 @@ async function getOmniTransaction(hash) {
         if (!response.data.type.startsWith('Error')) {
             return {
                 success: true,
+                explorer: 'omni',
                 data: {
                     confirmed: response.data.confirmations > 0,
                     receiver: response.data.referenceaddress,
                 },
             }
-        } else {
-            return {
-                success: true,
-                data: {
-                    confirmed: false,
-                },
-            }
         }
+
+        return {
+            success: false,
+        }
+
     } catch (e) {
         return {
             success: false,
